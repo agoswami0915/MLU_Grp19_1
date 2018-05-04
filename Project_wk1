@@ -1,0 +1,48 @@
+# Data Preprocessing Template
+
+# Importing the libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from pandas.plotting import scatter_matrix
+
+# Importing the dataset
+u1_base = pd.read_csv('/tmp/eider-user/userfile/avijitg/u1.base', sep = '\t', header=None, names= ['user id', 'item id', 'rating', 'timestamp'])
+u1_test = pd.read_csv('/tmp/eider-user/userfile/avijitg/u1.test', sep = '\t', header=None, names= ['user id', 'item id', 'rating', 'timestamp'])
+user_id = u1_base.iloc[:, :1].values
+user_id_sorted = np.sort(user_id, axis = None)
+item_id = u1_base.iloc[:, 1:2].values
+
+
+# unique numner of users and their counts
+# The count of user is same as number if times they rated a movie
+unique_elements, counts_elements = np.unique(user_id, return_counts=True)
+
+uid_unique = unique_elements
+uid_unique_count = counts_elements
+
+# User ids that has more than 100  counts
+uid_greater_100 = uid_unique_count[uid_unique_count>100]
+ind_uid_greater_100 = np.nonzero(uid_unique_count > 100)
+
+# Total number of Users that are having more than 100 ratings
+uid_greater_100_review = np.sum(ind_uid_greater_100)
+
+# Total number of Users in u.data
+user_ids_total = np.sum(user_id)
+
+# Percentage of users given more than 100 reviews
+uid_percentage_100_review = uid_greater_100_review*100/user_ids_total
+
+
+# Visualising the Training set - Histograms
+u1_base.hist()
+plt.show()
+
+#Density Plots
+u1_base.plot(kind='density', subplots=True, layout=(3,3), sharex=False)
+plt.show()
+
+#Scattered Plot
+scatter_matrix(u1_base)
+plt.show()
